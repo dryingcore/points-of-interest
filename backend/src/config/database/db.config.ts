@@ -2,7 +2,7 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import { sql } from 'drizzle-orm';
 import * as schema from '@/config/database/schema/index';
 import postgres from 'postgres';
-import EnvConfig from '@/utils/EnvConfig';
+import EnvConfig from '@/utils/env-config';
 
 const config = new EnvConfig();
 

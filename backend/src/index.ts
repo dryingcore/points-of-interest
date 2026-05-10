@@ -1,7 +1,8 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
 import { swaggerUI } from '@hono/swagger-ui'
 import { checkDbConnection } from '@/config/database/db.config'
-import EnvConfig from '@/utils/EnvConfig'
+import EnvConfig from '@/utils/env-config'
+import poisRouter from '@/routes/pois.routes'
 
 await checkDbConnection()
 
@@ -11,6 +12,8 @@ const app = new OpenAPIHono()
 app.get('/', (c) => {
   return c.text('Hello Hono! Server is running with DB connected.')
 })
+
+app.route('/pois', poisRouter)
 
 if (config.isDevelopment()) {
   app.doc('/swagger', {
