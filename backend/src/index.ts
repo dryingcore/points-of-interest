@@ -3,11 +3,13 @@ import { swaggerUI } from '@hono/swagger-ui'
 import { checkDbConnection } from '@/config/database/db.config'
 import EnvConfig from '@/utils/env-config'
 import poisRouter from '@/routes/pois.routes'
+import { validationHook } from '@/hooks/validation-hook'
 
 await checkDbConnection()
 
 const config = new EnvConfig()
-const app = new OpenAPIHono()
+
+const app = new OpenAPIHono({ defaultHook: validationHook })
 
 app.get('/', (c) => {
   return c.text('Hello Hono! Server is running with DB connected.')

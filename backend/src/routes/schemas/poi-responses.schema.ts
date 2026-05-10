@@ -19,7 +19,14 @@ export const poiResponseSchema = config.isDevelopment()
   : basePoiResponseSchema;
 
 export const badRequestSchema = z.object({
-  error: z.string().openapi({ example: 'Erro de validação' }),
+  success: z.boolean().openapi({ example: false }),
+  error: z.string().openapi({ example: 'Erro de Validação' }),
+  details: z.array(
+    z.object({
+      field: z.string().openapi({ example: 'x' }),
+      message: z.string().openapi({ example: 'A coordenada X deve ser um inteiro não negativo' }),
+    })
+  ).optional(),
 });
 
 export const internalServerErrorSchema = z.object({
