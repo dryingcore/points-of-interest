@@ -1,4 +1,5 @@
 export default class EnvConfig {
+  public readonly NODE_ENV: string;
   public readonly SERVER_PORT: number;
   public readonly POSTGRES_HOST: string;
   public readonly POSTGRES_PORT: number;
@@ -8,6 +9,7 @@ export default class EnvConfig {
   public readonly DATABASE_URL: string;
 
   constructor() {
+    this.NODE_ENV = process.env.NODE_ENV ?? "development";
     this.SERVER_PORT = Number(process.env.SERVER_PORT ?? 3000);
     this.POSTGRES_HOST = process.env.POSTGRES_HOST ?? "localhost";
     this.POSTGRES_PORT = Number(process.env.POSTGRES_PORT ?? 5432);
@@ -18,6 +20,10 @@ export default class EnvConfig {
     this.DATABASE_URL = this.buildDatabaseUrl();
 
     this.validate();
+  }
+
+  public isDevelopment(): boolean {
+    return this.NODE_ENV === "development";
   }
 
   private buildDatabaseUrl(): string {

@@ -1,15 +1,28 @@
-import { Hono } from 'hono'
+import { OpenAPIHono } from '@hono/zod-openapi'
+import { swaggerUI } from '@hono/swagger-ui'
 import { checkDbConnection } from '@/config/database/db.config'
 import EnvConfig from '@/utils/EnvConfig'
 
 await checkDbConnection()
 
 const config = new EnvConfig()
-const app = new Hono()
+const app = new OpenAPIHono()
 
 app.get('/', (c) => {
   return c.text('Hello Hono! Server is running with DB connected.')
 })
+
+if (config.isDevelopment()) {
+  app.doc('/swagger', {
+    openapi: '3.0.0',
+    info: {
+      version: '1.0.0',
+      title: 'POIs API',
+    },
+  })
+
+  app.get('/swagger-ui', swaggerUI({ url: '/swagger' }))
+}
 
 export default {
   port: config.SERVER_PORT,
