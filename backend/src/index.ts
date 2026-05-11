@@ -3,12 +3,15 @@ import { swaggerUI } from '@hono/swagger-ui'
 import { checkDbConnection } from '@/config/database/db.config'
 import EnvConfig from '@/utils/env-config'
 import poisRouter from '@/routes/pois.routes'
+import { cors } from 'hono/cors'
 
 await checkDbConnection()
 
 const config = new EnvConfig()
 
 const app = new OpenAPIHono()
+
+app.use('/pois/*', cors())
 
 app.get('/', (c) => {
   return c.text('Hello Hono! Server is running with DB connected.')
