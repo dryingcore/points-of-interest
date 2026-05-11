@@ -1,6 +1,7 @@
-import { createPoiService, getAllPoisService } from '@/services/pois.service';
+import { createPoiService, getAllPoisService, searchPoisService } from '@/services/pois.service';
 import type { createPoiRoute } from '@/routes/schemas/create-poi.openapi';
 import type { listPoisRoute } from '@/routes/schemas/list-pois.openapi';
+import type { searchPoisRoute } from '@/routes/schemas/search-pois.openapi';
 import { RouteHandler } from '@hono/zod-openapi';
 
 import { poiResponseSchema } from '@/routes/schemas/poi-responses.schema';
@@ -60,6 +61,27 @@ export const listPoisController: RouteHandler<typeof listPoisRoute> = async (c) 
     return c.json(safeResponse, 200);
   } catch (error) {
     console.error('Error listing POIs:', error);
+    return c.json({ error: 'Erro interno no servidor' }, 500);
+  }
+};
+
+export const searchPoisController: RouteHandler<typeof searchPoisRoute> = async (c) => {
+  const { x, y, dmax } = c.req.valid('query');
+
+  try {
+    const pois = await searchPoisService(x, y, dmax);
+
+    const safeResponse = pois.map(poi => 
+      poiResponseSchema.parse({
+        ...poi,
+        createdAt: poi.createdAt.toISOString(),
+        updatedAt: poi.updatedAt.toISOString(),
+      })
+    );
+
+    return c.json(safeResponse, 200);
+  } catch (error) {
+    console.error('Error searching POIs by proximity:', error);
     return c.json({ error: 'Erro interno no servidor' }, 500);
   }
 };

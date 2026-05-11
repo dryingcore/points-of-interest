@@ -1,6 +1,6 @@
 import { db } from '@/config/database/db.config';
 import { pois } from '@/config/database/schema/pois.schema';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, sql } from 'drizzle-orm';
 
 export type CreatePoiInput = typeof pois.$inferInsert;
 
@@ -21,4 +21,12 @@ export async function createPoi(data: CreatePoiInput) {
 
 export async function getAllPois() {
   return await db.select().from(pois);
+}
+
+export async function searchPoisByProximity(x: number, y: number, dmax: number) {
+  return await db.select()
+    .from(pois)
+    .where(
+      sql`sqrt(power(${pois.x} - ${x}, 2) + power(${pois.y} - ${y}, 2)) <= ${dmax}`
+    );
 }

@@ -1,4 +1,4 @@
-import { createPoi, getAllPois, getPoiByName, getPoiByCoordinates, CreatePoiInput } from '@/repository/pois.repository';
+import { createPoi, getAllPois, getPoiByName, getPoiByCoordinates, searchPoisByProximity, CreatePoiInput } from '@/repository/pois.repository';
 
 export async function createPoiService(data: CreatePoiInput) {
   const result = await createPoi(data);
@@ -20,4 +20,8 @@ export async function createPoiService(data: CreatePoiInput) {
 
 export async function getAllPoisService() {
   return await getAllPois();
+}
+
+export async function searchPoisService(x: number, y: number, dmax: number) {
+  return await searchPoisByProximity(x, y, dmax);
 }
