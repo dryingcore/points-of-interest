@@ -29,6 +29,19 @@ export const badRequestSchema = z.object({
   ).optional(),
 });
 
+export const conflictSchema = z.object({
+  success: z.boolean().openapi({ example: false }),
+  error: z.string().openapi({ example: 'Conflito de Regra de Negócio' }),
+  details: z.array(
+    z.object({
+      field: z.string().openapi({ example: 'database' }),
+      message: z.string().openapi({ 
+        example: 'Conflito: Nome de POI já cadastrado. (OU: Conflito: Coordenadas já ocupadas.)'
+      }),
+    })
+  ).optional(),
+});
+
 export const internalServerErrorSchema = z.object({
   error: z.string().openapi({ example: 'Erro interno no servidor' }),
 });

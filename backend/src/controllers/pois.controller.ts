@@ -24,8 +24,24 @@ export const createPoiController: RouteHandler<typeof createPoiRoute> = async (c
 
     return c.json(safeResponse, 201);
   } catch (error) {
+    if (error instanceof Error && error.message.startsWith('Conflito:')) {
+      return c.json(
+        {
+          success: false,
+          error: 'Conflito de Regra de Negócio',
+          details: [{ field: 'database', message: error.message }]
+        },
+        409
+      );
+    }
     console.error('Error creating POI:', error);
-    return c.json({ error: 'Erro interno no servidor' }, 500);
+    return c.json(
+      {
+        success: false,
+        error: 'Erro interno no servidor'
+      },
+      500
+    );
   }
 };
 

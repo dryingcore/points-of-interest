@@ -1,6 +1,6 @@
 import { z } from '@hono/zod-openapi';
 import { createRoute } from '@hono/zod-openapi';
-import { poiResponseSchema, badRequestSchema, internalServerErrorSchema } from './poi-responses.schema';
+import { poiResponseSchema, badRequestSchema, internalServerErrorSchema, conflictSchema } from './poi-responses.schema';
 
 export const createPoiSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório').max(255).openapi({
@@ -47,7 +47,15 @@ export const createPoiRoute = createRoute({
           schema: badRequestSchema,
         },
       },
-      description: 'Erro de validação (ex: X negativo)',
+      description: 'Erro de validação de Schema (ex: X negativo)',
+    },
+    409: {
+      content: {
+        'application/json': {
+          schema: conflictSchema,
+        },
+      },
+      description: 'Conflito de Regra de Negócio (ex: POI duplicado)',
     },
     500: {
       content: {
